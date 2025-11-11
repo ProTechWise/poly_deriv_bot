@@ -1,0 +1,5 @@
+{
+  "name": "DeepSeek Signal Analyzer",
+  "description": "A trading signal application that uses AI to analyze live market data from Deriv and generate Buy/Sell signals with Take Profit (TP) and Stop Loss (SL) levels.",
+  "requestFramePermissions": []
+}
