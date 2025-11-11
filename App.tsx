@@ -1,5 +1,4 @@
 
-
 import React, { useState, useEffect, useMemo, createContext, useContext, useRef } from 'react';
 import { GoogleGenAI } from "@google/genai";
 
@@ -171,7 +170,7 @@ const derivAPI = (() => {
         return promise;
     };
 
-    const disconnect = () => {
+    const disconnect = (updateState: boolean = true) => {
         intentionalDisconnect = true;
         clearTimeout(reconnectTimeoutId);
         reconnectTimeoutId = null;
@@ -194,7 +193,9 @@ const derivAPI = (() => {
         pendingRequests.forEach(p => p.reject({error: {message: 'Connection closing.'}}));
         pendingRequests.clear();
         requestCounter = 1;
-        onStateChangeCallback?.('disconnected', 'Disconnected.');
+        if (updateState) {
+            onStateChangeCallback?.('disconnected', 'Disconnected.');
+        }
     };
     
     const connect = (apiKey: string, onStateChange: (status: DerivStatus, message: string) => void) => {
@@ -227,7 +228,7 @@ const derivAPI = (() => {
                 const errorMessage = err?.error?.message || err.message || 'Authorization failed.';
                 onStateChangeCallback?.('error', errorMessage);
                 if (websocket) {
-                    disconnect();
+                    disconnect(false); // Authentication error, close connection but don't overwrite the error state.
                 }
             }
         };
